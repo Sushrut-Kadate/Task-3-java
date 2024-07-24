@@ -1,0 +1,119 @@
+import java.util.*;
+
+// Class to represent a Quiz Question
+class QuizQuestion {
+    private String question;
+    private List<String> options;
+    private int correctOptionIndex;
+
+    public QuizQuestion(String question, List<String> options, int correctOptionIndex) {
+        this.question = question;
+        this.options = options;
+        this.correctOptionIndex = correctOptionIndex;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public int getCorrectOptionIndex() {
+        return correctOptionIndex;
+    }
+}
+
+// Main Quiz Application class
+public class QuizApplication {
+    private static Scanner scanner = new Scanner(System.in);
+    private static List<QuizQuestion> questions = new ArrayList<>();
+    private static int score = 0;
+    private static int questionIndex = 0;
+
+    public static void main(String[] args) {
+        initializeQuestions();
+
+        System.out.println("Welcome to the Quiz!");
+
+        // Display each question one by one
+        for (QuizQuestion question : questions) {
+            displayQuestion(question);
+            if (answerQuestion(question)) {
+                score++;
+            }
+            System.out.println(); // Print a blank line for readability
+        }
+
+        // Display results
+        displayResult();
+    }
+
+    // Method to initialize quiz questions
+    private static void initializeQuestions() {
+        // Question 1
+        List<String> options1 = Arrays.asList("A. Option A", "B. Option B", "C. Option C", "D. Option D");
+        QuizQuestion question1 = new QuizQuestion("What is the capital of France?", options1, 0);
+
+        // Question 2
+        List<String> options2 = Arrays.asList("A. Option A", "B. Option B", "C. Option C", "D. Option D");
+        QuizQuestion question2 = new QuizQuestion("Which planet is known as the Red Planet?", options2, 1);
+
+        // Question 3
+        List<String> options3 = Arrays.asList("A. Option A", "B. Option B", "C. Option C", "D. Option D");
+        QuizQuestion question3 = new QuizQuestion("Who wrote 'Romeo and Juliet'?", options3, 2);
+
+        // Add questions to the list
+        questions.add(question1);
+        questions.add(question2);
+        questions.add(question3);
+    }
+
+    // Method to display a single quiz question
+    private static void displayQuestion(QuizQuestion question) {
+        System.out.println("Question: " + question.getQuestion());
+        List<String> options = question.getOptions();
+        for (String option : options) {
+            System.out.println(option);
+        }
+        System.out.print("Enter your answer (A/B/C/D): ");
+    }
+
+    // Method to handle user's answer submission
+    private static boolean answerQuestion(QuizQuestion question) {
+        String[] validAnswers = {"A", "B", "C", "D"};
+        String userAnswer;
+        do {
+            userAnswer = scanner.next().toUpperCase();
+        } while (!Arrays.asList(validAnswers).contains(userAnswer));
+
+        int correctOptionIndex = question.getCorrectOptionIndex();
+        String correctAnswer = String.valueOf((char) ('A' + correctOptionIndex));
+
+        if (userAnswer.equals(correctAnswer)) {
+            System.out.println("Correct!");
+            return true;
+        } else {
+            System.out.println("Incorrect. The correct answer is " + correctAnswer);
+            return false;
+        }
+    }
+
+    // Method to display final score and summary
+    private static void displayResult() {
+        System.out.println("\n----- Quiz Results -----");
+        System.out.println("Total Score: " + score + " out of " + questions.size());
+        System.out.println("Summary of Answers:");
+
+        for (int i = 0; i < questions.size(); i++) {
+            QuizQuestion question = questions.get(i);
+            int correctOptionIndex = question.getCorrectOptionIndex();
+            String correctAnswer = String.valueOf((char) ('A' + correctOptionIndex));
+            String userAnswer = i < questionIndex ? "Skipped" : (i == questionIndex ? "Current Question" : "Not Answered");
+            System.out.println("Question " + (i + 1) + ": " + userAnswer);
+            System.out.println("Correct Answer: " + correctAnswer);
+            System.out.println(); // Blank line for readability
+        }
+    }
+}
